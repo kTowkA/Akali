@@ -135,12 +135,11 @@ and open the template in the editor.
                             break;
                         }
                     case 'upg': {
-                            $error=0;
+                            $error = 0;
                             require_once 'login.php';
                             $db_server = mysql_connect($db_hostname, $db_username, $db_password);
-                            if (!$db_server)
-                            {
-                                $error=1;
+                            if (!$db_server) {
+                                $error = 1;
                                 die("Невозможно подключиться к mysql" . mysql_error());
                             }
                             mysql_select_db($db_database)
@@ -149,34 +148,31 @@ and open the template in the editor.
                             $query = "UPDATE `test`.`books` SET `name` = '" . $_GET['bk'] . "',`id_publishing_house` = '" . $_GET['PH'] . "' WHERE `books`.`id_book` =" . intval($_GET['book_id']) . ";";
                             $result = mysql_query($query);
                             if (!$result) {
-                                 $error=1;
+                                $error = 1;
+                                die("Невозможно выполнить запрос" . mysql_error());
+                            }
+                            $query2 = "DELETE FROM `author_books` WHERE id_book=" . intval($_GET['book_id']) . "";
+                            $result2 = mysql_query($query2);
+                            if (!$result2) {
+                                $error = 1;
                                 die("Невозможно выполнить запрос" . mysql_error());
                             }
                             if (isset($_GET['check'])) {
-                                $query = "DELETE FROM `author_books` WHERE id_book=" . intval($_GET['book_id']) . "";
-                                $result = mysql_query($query);
-                                if (!$result)
-                                {
-                                     $error=1;
-                                    die("Невозможно выполнить запрос" . mysql_error());
-                                }
+
                                 $check = $_GET['check'];
                                 foreach ($check as $ch) {
                                     $query3 = "INSERT INTO `test`.`author_books` (`id_author`, `id_book`) VALUES ('" . $ch . "', '" . $_GET['book_id'] . "');;";
                                     $result3 = mysql_query($query3);
                                     if (!$result3) {
-                                         $error=1;
+                                        $error = 1;
                                         die("Невозможно выполнить запрос" . mysql_error());
                                     }
                                 }
                             }
-                            if ($error==0)
-                            {
-                                    echo '<script>window.alert("Изменили!"); document.form_edit.action="index.php"; document.form_edit.submit();</script>';    
-                            }
-                            else
-                            {
-                                     echo '<script>window.alert("Изменить не получилось!"); document.form_edit.action="index.php"; document.form_edit.submit();</script>';   
+                            if ($error == 0) {
+                                echo '<script>window.alert("Изменили!"); document.form_edit.action="index.php"; document.form_edit.submit();</script>';
+                            } else {
+                                echo '<script>window.alert("Изменить не получилось!"); document.form_edit.action="index.php"; document.form_edit.submit();</script>';
                             }
                             mysql_close($db_server);
                             break;
